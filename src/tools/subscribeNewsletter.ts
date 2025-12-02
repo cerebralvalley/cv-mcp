@@ -1,6 +1,6 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { API_BASE_URL } from '../constants';
+import { subscribeToNewsletter } from '../api.js';
 
 export function registerSubscribeNewsletter(server: McpServer) {
   server.registerTool(
@@ -14,40 +14,16 @@ export function registerSubscribeNewsletter(server: McpServer) {
     },
     async ({ email }) => {
       try {
-        const response = await fetch(
-          `${API_BASE_URL}/public/beehiiv/subscribe`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email }),
-          }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          return {
-            content: [
-              {
-                type: 'text' as const,
-                text: data.detail || 'Subscription failed',
-              },
-            ],
-            isError: true,
-          };
-        }
+        const result = await subscribeToNewsletter(email);
 
         return {
           content: [
             {
               type: 'text' as const,
-              text:
-                data.detail ||
-                `Subscribed ${email} to Cerebral Valley newsletter`,
+              text: result.message,
             },
           ],
+          isError: !result.success,
         };
       } catch (error) {
         return {

@@ -5,7 +5,6 @@ An MCP (Model Context Protocol) server that provides AI assistants with access t
 ## Features
 
 - **search_events** — Search events by city, type, date range, and free-text query
-- **get_event_details** — Get full details for a specific event by ID
 - **submit_event** — Submit a new event for review
 - **subscribe_to_newsletter** — Subscribe an email to the CV newsletter
 
@@ -51,7 +50,6 @@ src/
 └── tools/
     ├── index.ts              # Tool registration
     ├── searchEvents.ts       # Search events tool
-    ├── getEventDetails.ts    # Get event details tool
     ├── submitEvent.ts        # Submit event tool
     └── subscribeNewsletter.ts # Newsletter subscription tool
 ```

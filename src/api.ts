@@ -6,13 +6,10 @@ export async function fetchEvents(
 ): Promise<CVEvent[]> {
   const url = new URL(`${API_BASE_URL}/public/event/pull`);
 
-  // Default to approved events in SF & Bay Area
+  // Default to approved, featured events in SF & Bay Area
   url.searchParams.set('approved', String(params.approved ?? true));
+  url.searchParams.set('featured', String(params.featured ?? true));
   url.searchParams.set('cityFilter', params.cityFilter ?? DEFAULT_CITY_FILTER);
-
-  if (params.featured !== undefined) {
-    url.searchParams.set('featured', String(params.featured));
-  }
   if (params.startDateTime) {
     url.searchParams.set('startDateTime', params.startDateTime);
   }
@@ -33,7 +30,33 @@ export async function fetchEvents(
   return data as CVEvent[];
 }
 
-export async function fetchEventById(id: string): Promise<CVEvent | null> {
-  const events = await fetchEvents({ startDateTime: new Date().toISOString() });
-  return events.find((e) => e.id === id) ?? null;
+export interface SubscribeResult {
+  success: boolean;
+  message: string;
+}
+
+export async function subscribeToNewsletter(
+  email: string
+): Promise<SubscribeResult> {
+  const response = await fetch(`${API_BASE_URL}/public/beehiiv/subscribe`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    return {
+      success: false,
+      message: data.detail || 'Subscription failed',
+    };
+  }
+
+  return {
+    success: true,
+    message: data.detail || `Subscribed ${email} to Cerebral Valley newsletter`,
+  };
 }
