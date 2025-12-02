@@ -4,7 +4,7 @@ import { registerAllTools } from './tools/index.js';
 
 const server = new McpServer(
   {
-    name: 'cv-events',
+    name: 'cv-mcp',
     version: '0.1.0',
   },
   {
