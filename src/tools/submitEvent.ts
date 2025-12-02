@@ -7,7 +7,7 @@ export function registerSubmitEvent(server: McpServer) {
     'submit_event',
     {
       description:
-        'Submit a new event to be listed on Cerebral Valley (pending review)',
+        'Submit a new event to be listed on Cerebral Valley (pending review). Users can optionally request to be featured on CV or request info about the CV events platform.',
       inputSchema: z.object({
         submitterEmail: z.email().describe('Email of the person submitting'),
         name: z.string().describe('Name of the event'),
