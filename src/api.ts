@@ -60,3 +60,45 @@ export async function subscribeToNewsletter(
     message: data.detail || `Subscribed ${email} to Cerebral Valley newsletter`,
   };
 }
+
+export interface EventSubmitParams {
+  submitterEmail: string;
+  name: string;
+  startDateTime: string;
+  endDateTime: string;
+  location: string;
+  url: string;
+  featureRequested: boolean;
+  cvEventsPlatformInfoRequested: boolean;
+}
+
+export interface SubmitResult {
+  success: boolean;
+  message: string;
+}
+
+export async function submitEvent(
+  params: EventSubmitParams
+): Promise<SubmitResult> {
+  const response = await fetch(`${API_BASE_URL}/public/event/submit`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    return {
+      success: false,
+      message: data.detail || 'Event submission failed',
+    };
+  }
+
+  return {
+    success: true,
+    message: data.detail || 'Event submitted successfully!',
+  };
+}

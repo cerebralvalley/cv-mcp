@@ -1,6 +1,6 @@
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { CITY_FILTER_VALUES, EVENT_TYPE_VALUES } from '../constants.js';
+import { submitEvent } from '../api';
 
 export function registerSubmitEvent(server: McpServer) {
   server.registerTool(
@@ -9,47 +9,57 @@ export function registerSubmitEvent(server: McpServer) {
       description:
         'Submit a new event to be listed on Cerebral Valley (pending review)',
       inputSchema: z.object({
+        submitterEmail: z.email().describe('Email of the person submitting'),
         name: z.string().describe('Name of the event'),
-        description: z.string().optional(),
-        descriptionSummary: z.string().optional().describe('Short summary'),
-        location: z.string(),
-        venue: z.string().optional(),
-        cityFilter: z.enum(CITY_FILTER_VALUES).optional(),
-        type: z
-          .enum(EVENT_TYPE_VALUES)
-          .optional()
-          .describe('Set to HACKATHON if this is a hackathon'),
         startDateTime: z.string().describe('ISO 8601 start time'),
         endDateTime: z.string().describe('ISO 8601 end time'),
-        timeZone: z
-          .string()
-          .optional()
-          .describe('IANA timezone, e.g. America/Los_Angeles'),
-        url: z
-          .string()
-          .url()
-          .optional()
-          .describe('External landing page, if any'),
+        location: z.string().describe('Event location'),
+        url: z.url().describe('Event landing page URL'),
+        featureRequested: z
+          .boolean()
+          .default(false)
+          .describe('Request to be featured on CV'),
+        cvEventsPlatformInfoRequested: z
+          .boolean()
+          .default(false)
+          .describe('Request info about CV events platform'),
       }),
     },
     async (input) => {
-      // TODO: Wire up to actual submission API endpoint
-      const id =
-        input.name
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/(^-|-$)/g, '') +
-        '-' +
-        Date.now().toString(36);
+      try {
+        const result = await submitEvent({
+          submitterEmail: input.submitterEmail,
+          name: input.name,
+          startDateTime: input.startDateTime,
+          endDateTime: input.endDateTime,
+          location: input.location,
+          url: input.url,
+          featureRequested: input.featureRequested,
+          cvEventsPlatformInfoRequested: input.cvEventsPlatformInfoRequested,
+        });
 
-      return {
-        content: [
-          {
-            type: 'text' as const,
-            text: `Event "${input.name}" submitted for review with id: ${id}. `,
-          },
-        ],
-      };
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: result.message,
+            },
+          ],
+          isError: !result.success,
+        };
+      } catch (error) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error submitting event: ${
+                error instanceof Error ? error.message : 'Unknown error'
+              }`,
+            },
+          ],
+          isError: true,
+        };
+      }
     }
   );
 }
