@@ -2,6 +2,15 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { submitEvent } from '../api';
 
+// Convert any ISO 8601 datetime to UTC format with Z suffix
+function toUTCDateTime(dateTimeStr: string): string {
+  const date = new Date(dateTimeStr);
+  if (isNaN(date.getTime())) {
+    throw new Error(`Invalid datetime: ${dateTimeStr}`);
+  }
+  return date.toISOString();
+}
+
 export function registerSubmitEvent(server: McpServer) {
   server.registerTool(
     'submit_event',
@@ -30,8 +39,8 @@ export function registerSubmitEvent(server: McpServer) {
         const result = await submitEvent({
           submitterEmail: input.submitterEmail,
           name: input.name,
-          startDateTime: input.startDateTime,
-          endDateTime: input.endDateTime,
+          startDateTime: toUTCDateTime(input.startDateTime),
+          endDateTime: toUTCDateTime(input.endDateTime),
           location: input.location,
           url: input.url,
           featureRequested: input.featureRequested,

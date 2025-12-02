@@ -27,7 +27,7 @@ export async function fetchEvents(
   }
 
   const data = await res.json();
-  return data as CVEvent[];
+  return data.events as CVEvent[];
 }
 
 export interface SubscribeResult {
