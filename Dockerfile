@@ -12,6 +12,8 @@ RUN bun install --frozen-lockfile --production
 COPY src ./src
 COPY tsconfig.json ./
 
-# Run the server
-CMD ["bun", "run", "src/server.ts"]
+# Expose port
+EXPOSE 8000
 
+# Run the HTTP server
+CMD ["bun", "run", "src/http-server.ts"]

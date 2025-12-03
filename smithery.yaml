@@ -1,12 +1,10 @@
+runtime: 'container'
+build:
+  dockerfile: 'Dockerfile'
+  dockerBuildPath: '.'
 startCommand:
-  type: stdio
+  type: 'http'
   configSchema:
-    type: object
+    type: 'object'
     properties: {}
-    description: Cerebral Valley enables AI assistants to search, discover, and submit AI community events and hackathons.
-  commandFunction: |
-    (config) => ({
-      command: 'bun',
-      args: ['run', 'src/server.ts']
-    })
-  exampleConfig: {}
+    required: []
