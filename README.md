@@ -1,4 +1,7 @@
+```markdown
 # Cerebral Valley Events MCP Server
+
+[![smithery badge](https://smithery.ai/badge/@cerebralvalley/cv-mcp)](https://smithery.ai/server/@cerebralvalley/cv-mcp)
 
 An MCP (Model Context Protocol) server that provides AI assistants with access to Cerebral Valley events data.
 
@@ -80,3 +83,4 @@ The server connects to the Cerebral Valley public API:
 - [Bun](https://bun.sh) — JavaScript runtime
 - [MCP SDK](https://github.com/modelcontextprotocol/sdk) — Model Context Protocol
 - [Zod](https://zod.dev) — Schema validation
+```
