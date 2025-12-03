@@ -4,7 +4,7 @@ import { registerAllTools } from './tools/index.js';
 
 const server = new McpServer(
   {
-    name: 'cv-mcp',
+    name: 'cerebralvalley',
     version: '0.1.0',
   },
   {
