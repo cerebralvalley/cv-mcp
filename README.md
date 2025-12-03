@@ -1,4 +1,4 @@
-# Cerebral Valley Events MCP Server
+# Cerebral Valley MCP Server
 
 An MCP (Model Context Protocol) server that provides AI assistants with access to Cerebral Valley events data.
 
