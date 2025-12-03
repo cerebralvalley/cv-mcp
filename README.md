@@ -1,6 +1,6 @@
 # Cerebral Valley MCP Server
 
-An MCP (Model Context Protocol) server that provides AI assistants with access to Cerebral Valley events data.
+Cerebral Valley provides tools for discovering and submitting AI community events, hackathons, and meetups.
 
 ## Features
 
@@ -8,21 +8,52 @@ An MCP (Model Context Protocol) server that provides AI assistants with access t
 - **submit_event** — Submit a new event for review
 - **subscribe_to_newsletter** — Subscribe an email to the CV newsletter
 
-## Installation
+## Quick Start (Hosted)
+
+The easiest way to use this MCP server is via [Smithery](https://smithery.ai/server/@cerebralvalley/cv-mcp).
+
+### With Claude Desktop
+
+```bash
+npx -y @smithery/cli install @cerebralvalley/cv-mcp --client claude
+```
+
+### With Cursor
+
+```bash
+npx -y @smithery/cli install @cerebralvalley/cv-mcp --client cursor
+```
+
+Or manually add to your `~/.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "cerebralvalley": {
+      "url": "https://server.smithery.ai/@cerebralvalley/cv-mcp/mcp"
+    }
+  }
+}
+```
+
+## Self-Hosted Installation
+
+If you want to run the server locally:
+
+### Installation
 
 ```bash
 bun install
 ```
 
-## Usage
-
 ### Development
 
 ```bash
-bun run dev
+bun run dev        # stdio transport (for local MCP clients)
+bun run dev:http   # HTTP transport (for testing Smithery deployment)
 ```
 
-### With Cursor
+### With Cursor (Local)
 
 Add to your `~/.cursor/mcp.json`:
 
@@ -43,14 +74,15 @@ Then restart Cursor to load the MCP server.
 
 ```
 src/
-├── server.ts       # MCP server entry point
-├── api.ts          # API fetch functions
-├── types.ts        # TypeScript types
-├── constants.ts    # Shared constants (cities, event types, etc.)
+├── server.ts        # MCP server entry point (stdio transport)
+├── http-server.ts   # MCP server for Smithery (HTTP transport)
+├── api.ts           # API fetch functions
+├── types.ts         # TypeScript types
+├── constants.ts     # Shared constants (cities, event types, etc.)
 └── tools/
-    ├── index.ts              # Tool registration
-    ├── searchEvents.ts       # Search events tool
-    ├── submitEvent.ts        # Submit event tool
+    ├── index.ts               # Tool registration
+    ├── searchEvents.ts        # Search events tool
+    ├── submitEvent.ts         # Submit event tool
     └── subscribeNewsletter.ts # Newsletter subscription tool
 ```
 
